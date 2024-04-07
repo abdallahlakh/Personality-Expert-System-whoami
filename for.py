@@ -1,7 +1,8 @@
 # Import libraries
+import re
 import aima.utils
 import aima.logic
-def ask_selected_indirect_questions(KB, trait_matches):
+def ask_selected_indirect_questions(KB):
     # Define the selected indirect questions
     selected_indirect_questions = [
         {"question": "Do you enjoy reading books?", "trait": "LikesReading", "trait2": "Openness"},
@@ -16,10 +17,6 @@ def ask_selected_indirect_questions(KB, trait_matches):
         answer = input(question["question"] + " (yes/no): ")
         if answer.lower() == "yes":
             KB.tell(aima.utils.expr(f'{question["trait"]}(Walter)'))
-            for personality in trait_matches:
-                if list(aima.logic.fol_fc_ask(KB, aima.utils.expr(f'HasTrait(Walter, {question["trait2"]}) & {personality}(Walter)'))):
-                    trait_matches[personality] += 1
-                    break
         else:
             KB.tell(aima.utils.expr(f'Not({question["trait"]}(Walter))'))
 
@@ -72,22 +69,75 @@ def main():
 
     # Create a first-order logic knowledge base (KB) with clauses
     KB = aima.logic.FolKB(clauses)
+    trait_matches = {personality: 0 for personality in personality_types}
 
     # Create a dictionary to keep track of the number of matching traits for each personality type
     trait_matches = {personality: 0 for personality in personality_types}
-
     # Ask the selected indirect questions and update trait_matches
     ask_selected_indirect_questions(KB, trait_matches)
-
+    #declare to me a list of max 4 length
+    walter_traits = []
     # Calculate the percentage match for each personality type
     for personality in personality_types:
+        # part 1 check if Walter is a personality
         answer = aima.logic.fol_fc_ask(KB, aima.utils.expr(f'{personality}(Walter)'))
-        print(trait_matches)
-        percentage_match = (trait_matches[personality] / len(rules)) * 100
-        print(f'Is Walter a {personality}?')
-        print('True' if list(answer) else 'False')
-        print(f'Percentage match: {percentage_match}%')
+        print(f'Walter is {personality} ' if list(answer) else f'Walter is not {personality} ')
+        
 
-# Tell python to run main method
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # part 2 calculate the matching percentage       
+        walter_traits = []
+        
+        for k in KB.clauses:
+            # Check if the clause matches the format HasTrait(Walter, Trait) or Not(HasTrait(Walter, Trait))
+            if str(k).startswith("HasTrait(Walter") or str(k).startswith("Not(HasTrait(Walter"):
+                # If it does, add it to the list of Walter's traits
+                walter_traits.append(str(k))
+                # If the list already has four traits, break the loop
+                if len(walter_traits) == 4:  
+                    break
+                    
+            # Check if the clause implies the current personality
+            if f"=> {personality}(x)" in str(k):
+                
+                # Extract the traits required for the current personality
+                required_traits_str = str(k).split("==>")[0]
+                required_traits = re.findall(r'(HasTrait\(x, \w+\)|Not\(HasTrait\(x, \w+\)\))', required_traits_str)
+                
+                # Replace 'x' with 'Walter' in the required traits
+                required_traits = [re.sub(r'\(x,', '(Walter,', trait) for trait in required_traits]
+        
+        # Calculate the matching percentage after the loop
+        matching_traits = set(required_traits).intersection(set(walter_traits))
+        matching_percentage = (len(matching_traits) / len(required_traits)+0.2) * 100
+        print(f"Matching percentage for {personality}: {matching_percentage}%")  
+
+
 if __name__ == "__main__":
     main()
