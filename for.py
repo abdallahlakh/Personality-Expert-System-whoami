@@ -2,6 +2,16 @@
 import re
 import aima.utils
 import aima.logic
+
+# Explanation Unit
+def explain(rule, fact):
+    print(f"The rule {rule} was fired because of the fact {fact}.")
+
+# Working Memory
+working_memory = []
+
+# Agenda
+agenda = []
 def ask_selected_indirect_questions(KB):
     # Define the selected indirect questions
     selected_indirect_questions = [
@@ -11,14 +21,18 @@ def ask_selected_indirect_questions(KB):
         {"question": "Do you often feel sympathy for others?", "trait": "IsSympathetic", "trait2": "Agreeableness"},
         {"question": "Do you often feel nervous?", "trait": "GetsNervous", "trait2": "Neuroticism"},
     ]
-
-    # Ask the selected indirect questions
+        # Ask the selected indirect questions
     for question in selected_indirect_questions:
         answer = input(question["question"] + " (yes/no): ")
         if answer.lower() == "yes":
             KB.tell(aima.utils.expr(f'{question["trait"]}(Walter)'))
+            working_memory.append(f'{question["trait"]}(Walter)')
+            explain(f'{question["trait"]}(Walter)', f'{question["trait2"]}(Walter)')
         else:
             KB.tell(aima.utils.expr(f'Not({question["trait"]}(Walter))'))
+            working_memory.append(f'Not({question["trait"]}(Walter)')
+            explain(f'Not({question["trait"]}(Walter)', f'Not({question["trait2"]}(Walter)')
+
 
 # The main entry point for this module
 def main():
