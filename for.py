@@ -21,18 +21,14 @@ def ask_selected_indirect_questions(KB):
         {"question": "Do you often feel sympathy for others?", "trait": "IsSympathetic", "trait2": "Agreeableness"},
         {"question": "Do you often feel nervous?", "trait": "GetsNervous", "trait2": "Neuroticism"},
     ]
-        # Ask the selected indirect questions
+
+    # Ask the selected indirect questions
     for question in selected_indirect_questions:
         answer = input(question["question"] + " (yes/no): ")
         if answer.lower() == "yes":
             KB.tell(aima.utils.expr(f'{question["trait"]}(Walter)'))
-            working_memory.append(f'{question["trait"]}(Walter)')
-            explain(f'{question["trait"]}(Walter)', f'{question["trait2"]}(Walter)')
         else:
             KB.tell(aima.utils.expr(f'Not({question["trait"]}(Walter))'))
-            working_memory.append(f'Not({question["trait"]}(Walter)')
-            explain(f'Not({question["trait"]}(Walter)', f'Not({question["trait2"]}(Walter)')
-
 
 # The main entry point for this module
 def main():
@@ -76,26 +72,21 @@ def main():
     'WorriesALot(x) ==> HasTrait(x, Neuroticism)',
     'Not(WorriesALot(x)) ==> Not(HasTrait(x, Neuroticism))'
     ]
-
-    
     for rule in rules + indirect_questions:
         clauses.append(aima.utils.expr(rule))
-
     # Create a first-order logic knowledge base (KB) with clauses
     KB = aima.logic.FolKB(clauses)
-    trait_matches = {personality: 0 for personality in personality_types}
-
-    # Create a dictionary to keep track of the number of matching traits for each personality type
-    trait_matches = {personality: 0 for personality in personality_types}
     # Ask the selected indirect questions and update trait_matches
-    ask_selected_indirect_questions(KB, trait_matches)
+    ask_selected_indirect_questions(KB)
     #declare to me a list of max 4 length
     walter_traits = []
     # Calculate the percentage match for each personality type
     for personality in personality_types:
         # part 1 check if Walter is a personality
         answer = aima.logic.fol_fc_ask(KB, aima.utils.expr(f'{personality}(Walter)'))
-        print(f'Walter is {personality} ' if list(answer) else f'Walter is not {personality} ')
+        if list(answer):
+           print(f'Walter is {personality} ' if list(answer) else f'Walter is not {personality} ')
+           exit(0)
         
 
 
