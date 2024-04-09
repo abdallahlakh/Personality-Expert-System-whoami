@@ -65,7 +65,7 @@ def fol_fc_ask(kb, alpha):
 
     # Redirect stdout to a file
     original_stdout = sys.stdout  # Save a reference to the original standard output
-    with open(os.path.expanduser('~/code/infrenceprocess.json'), 'w') as f:
+    with open(os.path.expanduser('~/expert-system/infrenceprocess.json'), 'w') as f:
         sys.stdout = f  # Change the standard output to the file we created.
 
         print(json.dumps({"Agenda_rules_withpriority0_start_execution_first": agenda}))
