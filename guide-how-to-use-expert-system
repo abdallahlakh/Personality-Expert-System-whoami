@@ -1,0 +1,15 @@
+###############################################begin############################################################
+steps to use the expert system #for unix distrbutions#
+1-make sure you are in the ~ folder
+2-then git clone https://github.com/abdallahlakh/expert-system make sure to enter abdallahlakh as username and access token as paswword
+ #now you cloned expert-system in your local machine run now cd ~/expert-system
+
+3-now make sure that you have python interperteur python3.9
+4-then run python3.9 - venv venv to create a virtual enviroment
+5-now run source venv/bin/activate
+ #now you 've activate the virtual enviroment
+6- now run pip install -r requirements.txt
+  # run pip list to see if the packages are added 
+7- now run cd ~/expert-system/venv/lib/python3.9/site-packages/aima && code .  go to logic.py file and update the default fonction of  def fol_fc_ask(kb, alpha):   with the fonction in ~/expert-system/fol_fonc.py 
+now go back to ~/expert-system and activate your venv then run your main flask app with python3.9 app.py navigate to your flask app where he is runing that's all
+####################################################end#####################################################
