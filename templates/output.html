@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Output</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+        }
+        ul {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            color: #333;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Output:</h1>
+    <p>Mourad: {{ data['Mourad'] if 'Mourad' in data else 'No exact personality match found' }}</p>
+    <p>Matching percentages:</p>
+    <ul>
+        {% for key, value in data.items() %}
+            {% if key != 'Mourad' and key != 'facts' %}
+                <li>{{ key }}: {{ value['Matching percentage'] }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <p>Facts about this pesonality:</p>
+    <ul>
+        {% if 'facts' in data and data['facts'] %}
+            {% for fact in data['facts'] %}
+                <li>{{ fact }}</li>
+            {% endfor %}
+        {% else %}
+            <li>No facts </li>
+        {% endif %}
+    </ul>
+</body>
+</html>

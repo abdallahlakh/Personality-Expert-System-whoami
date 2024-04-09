@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explanation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #e8e8e8;
+            color: #333;
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        li {
+            margin-bottom: 10px;
+            list-style: none;
+        }
+        strong {
+            color: #666;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .agenda {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .priority {
+            margin-bottom: 10px;
+        }
+        .priority:first-child {
+            margin-top: 5px;
+        }
+        .priority strong {
+            color: #444;
+        }
+        .explaining {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .working-memory {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <h1>inference engine : forward chaining</h1>
+                    </ul>
+        {% for item in data %}
+            
+            <div >
+                <strong>Database of input facts:</strong>
+                <ul>
+                    {% for subitem in item[31:36] %}
+                        <li>{{ subitem['Working memory'] }}</li>
+                    {% endfor %}
+                </ul>
+
+                <strong>Database of new facts founding according to the input facts:</strong>
+                <ul>
+                    {% for subitem in item[36:] %}
+                        <li>{{ subitem['Working memory'] }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <li>
+                <div class="agenda">
+                    {% for key, value in item[0].items() %}
+                        <strong>{{ key }}</strong>
+                        <div class="priority">
+                            <ul>
+                                {% for subvalue in value %}
+                                    {% if subvalue[0] == 0 %}
+                                        <strong>Rules with Priority 0:</strong>
+                                        <li>{{ subvalue[1] }}</li>
+                                    {% else %}
+                                        <strong>Rules with Priority 1:</strong>
+                                        <li>{{ subvalue[1] }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="explaining">
+                    <strong>Explaining of rules:</strong>    
+                    <ul>
+                        {% for subitem in item[1:30] %}
+                            <li>{{ subitem['Explaining'] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="working-memory">
+                    <strong>Working memory:</strong>
+                    <ul>
+                        {% for subitem in item[31:] %}
+                            <li>{{ subitem['Working memory'] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

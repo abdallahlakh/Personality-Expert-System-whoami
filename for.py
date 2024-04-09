@@ -2,25 +2,32 @@
 import re
 import aima.utils
 import aima.logic
-
-
+from facts import personality_facts
+import json
 def ask_selected_indirect_questions(KB):
-    # Define the selected indirect questions
     selected_indirect_questions = [
-        {"question": "Do you enjoy reading books?", "trait": "LikesReading", "trait2": "Openness"},
-        {"question": "Do you find it easy to stay organized?", "trait": "IsOrganized", "trait2": "Conscientiousness"},
-        {"question": "Do you enjoy being around people?", "trait": "IsSocial", "trait2": "Extraversion"},
-        {"question": "Do you often feel sympathy for others?", "trait": "IsSympathetic", "trait2": "Agreeableness"},
-        {"question": "Do you often feel nervous?", "trait": "GetsNervous", "trait2": "Neuroticism"},
+    {"question": "Would you enjoy spending a quiet afternoon immersed in a novel?", "trait": "LikesReading", "trait2": "Openness"},
+    {"question": "Do you often find yourself rearranging your workspace to keep it tidy?", "trait": "IsOrganized", "trait2": "Conscientiousness"},
+    {"question": "Would you enjoy attending a large social gathering?", "trait": "IsSocial", "trait2": "Extraversion"},
+    {"question": "Do you feel sympathy when you hear about someone's misfortune?", "trait": "IsSympathetic", "trait2": "Agreeableness"},
+    {"question": "Do you usually feel nervous when something unexpected happens?", "trait": "GetsNervous", "trait2": "Neuroticism"}
     ]
+    
+    # Load answers from input.json
+    with open('input.json', 'r') as f:
+        answers = json.load(f)
 
-    # Ask the selected indirect questions
+    # Tell the knowledge base based on the answers
     for question in selected_indirect_questions:
-        answer = input(question["question"] + " (yes/no): ")
+        answer = answers.get(question["trait"], "no")
         if answer.lower() == "yes":
             KB.tell(aima.utils.expr(f'{question["trait"]}(Mourad)'))
         else:
             KB.tell(aima.utils.expr(f'Not({question["trait"]}(Mourad))'))
+
+
+
+output = {}
 
 # The main entry point for this module
 def main():
@@ -74,13 +81,27 @@ def main():
     walter_traits = []
     # Calculate the percentage match for each personality type
     for personality in personality_types:
+        if personality not in output:
+           output[personality] = []  # Initialize the key with an empty list
         # part 1 check if Mourad is a personality
         answer = aima.logic.fol_fc_ask(KB, aima.utils.expr(f'{personality}(Mourad)'))
         if list(answer):
+           output[personality] = []
            print('\n\n\n\n\n\n\n\n\n\n\n\n\n')
-           print(f'Mourad is {personality} ' if list(answer) else f'Mourad is not {personality} ')
+           print(f'Mourad is {personality} ')
+           for p in personality_facts:
+             if p['type'] == personality:
+                print("Facts:")
+                for fact in p['facts']:
+                    print(fact)
+                    output[personality] = []
+                    for p in personality_facts:
+                        if p['type'] == personality:
+                            output['facts']=p['facts']
+                            output['Mourad'] = personality
+   
            
-        
+   
 
 
 
@@ -133,11 +154,27 @@ def main():
         
         # Calculate the matching percentage after the loop
         matching_traits = set(required_traits).intersection(set(walter_traits))
-        matching_percentage = (len(matching_traits) / len(required_traits)+0.2) * 100
+        matching_percentage = (len(matching_traits) / len(required_traits)) * 100
         print('\n\n\n\n\n\n\n\n\n\n\n\n\n')
         print(f"Matching percentage for {personality}: {matching_percentage}%")  
+        output[personality]=({'Matching percentage': str(matching_percentage)+"%"})
         print('\n\n\n\n\n\n\n\n\n\n\n\n\n')
-    
-
 if __name__ == "__main__":
     main()
+
+    with open('output.json', 'w') as f:
+        json.dump(output, f)
+
+    
+    data = []
+    
+    with open('infrenceprocess.json', 'r') as f:
+        for line in f:
+            data.append(json.loads(line))
+    
+    # Wrap the objects in a list
+    data = [data]
+    
+    # Write the result back to the JSON file
+    with open('infrenceprocess.json', 'w') as f:
+        json.dump(data, f, indent=4)

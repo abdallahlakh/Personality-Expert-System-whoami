@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Whoami</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        form {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        select {
+            margin-left: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            background-color: black;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: black;
+        }
+        a {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        a:hover {
+            color: #000;
+        }
+        select {
+            margin-left: 10px;
+            padding: 5px;
+            font-size: 16px;
+            color: #333;
+            background-color: #fff;
+        }
+        option[value="yes"] {
+            color: black;
+        }
+        option[value="no"] {
+            color: red;
+        }
+
+        #run-processing {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #run-processing:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <center><h1>Whoami</h1></center>
+    <form method="POST">
+        {% for question in questions %}
+            <p>{{ question.question }} 
+                <select name="{{ question.trait }}">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </p>
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+    <button id="run-processing">Run decision-making Processing</button>
+
+    <a href="/output">Show Output</a>
+    <a href="inferenceprocess">Show Inference Process</a>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+      $("#run-processing").click(function(){
+        $.get("/run_processing", function(data, status){
+          alert("Processing executed successfully!");
+        });
+      });
+    });
+    </script>
+</body>
+</html>
