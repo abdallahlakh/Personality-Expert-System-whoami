@@ -39,7 +39,7 @@ def show_inference():
 
 @app.route('/run_processing')
 def run_processing():
-    subprocess.run(["bash", "-c", "cd ~/code && source venv/bin/activate && python3.9 for.py"])
+    subprocess.run(["bash", "-c", "cd ~/expert-system && source venv/bin/activate && python3.9 for.py"])
     return 'Processing executed successfully'
 
 if __name__ == '__main__':
