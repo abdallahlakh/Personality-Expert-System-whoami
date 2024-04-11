@@ -1,7 +1,7 @@
 ###############################################begin############################################################
 steps to use the expert system #for unix distrbutions#
 1-make sure you are in the ~ folder
-2-then git clone https://github.com/abdallahlakh/expert-system make sure to enter abdallahlakh as username and access token as paswword
+2-then git clone https://github.com/abdallahlakh/expert-system 
  #now you cloned expert-system in your local machine run now cd ~/expert-system
 
 3-now make sure that you have python interperteur python3.9
